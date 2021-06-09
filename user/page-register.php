@@ -8,6 +8,8 @@ if( !empty($_POST['register_reg']) ) {
 	$error = '';
 	$sanitized_user_login = sanitize_user( $_POST['user_login'] );
 	$user_email = apply_filters( 'user_registration_email', $_POST['user_email'] );
+	if(1 != $suc_flag){$suc_flag = 0;}
+	
 
 	// Check the username
 	if ( $sanitized_user_login == '' ) {
@@ -46,12 +48,21 @@ if( !empty($_POST['register_reg']) ) {
 		if ( !$user_id ) {
 			$error .= sprintf( '<strong>错误</strong>：无法完成注册请求... 请联系<a href=\"mailto:%s\">管理员</a>！<br />', get_option( 'admin_email' ) );
 		}else if (!is_user_logged_in()) {
-			$user = get_userdatabylogin($sanitized_user_login);
-			$user_id = $user->ID;
+			//$user = get_userdatabylogin($sanitized_user_login);
+			//$user_id = $user->ID;
 			// 自动登录
-			wp_set_current_user($user_id, $user_login);
-			wp_set_auth_cookie($user_id);
-			do_action('wp_login', $user_login);
+			//wp_set_current_user($user_id, $user_login);
+			//wp_set_auth_cookie($user_id);
+			//do_action('wp_login', $user_login);
+			//header("Location: http://benzencloudhk.xyz/index.php/login/");
+			$error .= sprintf('<strong>成功</strong>：注册成功，正在跳转登陆页面……<br />');
+			$suc_flag = 1;
+			//sleep(1);
+			//$url = "http://benzencloudhk.xyz/index.php/login/"; 
+			//echo " <script language='javascript' type='text/javascript'> "; 
+			//echo " window.location.href = '$url' "; 
+			//echo " </script> "; 
+			//exit;
 		}
 	}
 }
@@ -80,6 +91,8 @@ if( !empty($_POST['register_reg']) ) {
 					<?php endif; ?>
 					<input type="hidden" name="register_reg" value="ok" />
 					<?php if(!empty($error)) { echo '<p class="user-error">'.$error.'</p>'; } ?>
+					<?php if(1 === $suc_flag){echo "<script>alert('成功：注册成功，正在跳转登陆页面……')</script>"; } ?>
+					<?php if(1 === $suc_flag){echo "<script language='javascript' type='text/javascript'>window.location.href='https://fishroud.xyz/login/'</script>"; } ?>
 					<input class="button register-button" name="submit" type="submit" value="注 册">
 				</form>
 			</div>
